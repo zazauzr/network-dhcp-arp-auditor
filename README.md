@@ -39,7 +39,7 @@ Remote workstations authenticating to a corporate domain (`corp.internal`) repor
 ### 1. Initial State & Tunnel Inspection
 Analysis of network interfaces revealed an unassociated wireless adapter state alongside an active WireGuard tunnel adapter:
 
-![Initial Interface State](docs/img/01_initial_ipconfig_analysis.png.png)
+![Initial Interface State](docs/img/01_initial_ipconfig_analysis.png)
 
 ### 2. Domain Trust & Group Policy Verification
 Execution of `gpupdate /force` validated that the machine temporarily failed domain controller name resolution due to route/interface isolation:
