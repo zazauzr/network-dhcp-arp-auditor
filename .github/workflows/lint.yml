@@ -1,0 +1,27 @@
+name: PowerShell Linting & Validation
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  analyze:
+    name: Run PSScriptAnalyzer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          $Results = Invoke-ScriptAnalyzer -Path ./scripts -Recurse -Severity Error, Warning
+          if ($Results) {
+              $Results | Format-Table -AutoSize
+              throw "PSScriptAnalyzer found issues in automation scripts."
+          } else {
+              Write-Host "All scripts passed static code analysis successfully."
+          }
