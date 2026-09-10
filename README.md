@@ -89,8 +89,10 @@ Test-NetConnection -ComputerName "gateway.corp.internal" -Port 445
 - Static ARP entries must never overlap with dynamic DHCP allocation ranges.
 - Dual-homed endpoints (Domain + WireGuard/VPN) amplify blackholing effects when split-tunnel routing relies on default route overrides.
 
-## License
+## Copyright and License
 
-Copyright (c) 2026. All rights reserved.
+Copyright (c) 2026 zazauzr. All rights reserved.
+
+This repository and all its contents (including documentation, scripts, and configuration files) are proprietary. Unauthorized copying, modification, distribution, or commercial use of any materials from this repository, via any medium, is strictly prohibited without the express prior written permission of the copyright holder.
 
 This repository and its associated automation assets are proprietary intellectual property. Unauthorized copying, distribution, modification, or commercial exploitation of this material via any medium is strictly prohibited.
