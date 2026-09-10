@@ -1,9 +1,6 @@
 # DHCP vs L2/L3 Static ARP Desynchronization Mitigation
 
-![Network Engineering](https://shields.io)
-![Platform](https://shields.io)
-![PowerShell](https://shields.io)
-![Status](https://shields.io)
+
 
 ## Problem Overview & Root Cause Analysis
 
