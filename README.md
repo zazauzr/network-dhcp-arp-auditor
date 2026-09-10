@@ -34,6 +34,22 @@ Remote workstations authenticating to a corporate domain (`corp.internal`) repor
         | [X] Dropped Frames       v [Target: Stale MAC]
         +------------------ (Black Hole)
 ```
+## Investigation & Evidence
+
+### 1. Initial State & Tunnel Inspection
+Analysis of network interfaces revealed an unassociated wireless adapter state alongside an active WireGuard tunnel adapter:
+
+![Initial Interface State](docs/img/01_initial_ipconfig_analysis.png)
+
+### 2. Domain Trust & Group Policy Verification
+Execution of `gpupdate /force` validated that the machine temporarily failed domain controller name resolution due to route/interface isolation:
+
+![GPO Isolation](docs/img/02_domain_gpo_resolution.png)
+
+### 3. Asymmetric Traffic Blackholing Verification
+Local gateway/domain controller responded with minimal latency (`<3ms`), confirming functional physical L2 link, while outbound egress traffic was dropped entirely (100% loss):
+
+![ICMP Blackholing](docs/img/03_icmp_asymmetric_blackhole.png)
 
 ## Solution Components
 
