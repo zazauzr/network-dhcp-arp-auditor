@@ -1,6 +1,9 @@
 # DHCP vs L2/L3 Static ARP Desynchronization Mitigation
 
-
+![Network Engineering](https://shields.io)
+![Platform](https://shields.io)
+![PowerShell](https://shields.io)
+![Status](https://shields.io)
 
 ## Problem Overview & Root Cause Analysis
 
@@ -16,9 +19,26 @@ Remote workstations authenticating to a corporate domain (`corp.internal`) repor
 
 ## Architecture & Topology
 
-|                        Active Directory                        ||                    Windows Server DHCP Scope                   ||                        (192.168.10.0/24)                       || Dynamic Allocation|Wireless Client  | --> |  Default Gateway  | --> |  Internet   || (Dynamic IP: .24)|     | (Static ARP: .24) |     |  (8.8.8.8)  |
-                          | [X] Dropped Frames       v [Target: Stale MAC]
-                          ## Solution Components
+```text
++----------------------------------------------------------------+
+
+|                        Active Directory                        |
+|                    Windows Server DHCP Scope                   |
+|                        (192.168.10.0/24)                       |
++-------------------------------+--------------------------------+
+                                | Dynamic Allocation
+                                v
++------------------+     +-------------------+     +-------------+
+
+| Wireless Client  | --> |  Default Gateway  | --> |  Internet   |
+| (Dynamic IP: .24)|     | (Static ARP: .24) |     |  (8.8.8.8)  |
++------------------+     +---------+---------+     +-------------+
+        ^                          |
+        | [X] Dropped Frames       v [Target: Stale MAC]
+        +------------------ (Black Hole)
+```
+
+## Solution Components
 
 - **Reconciliation Engine (`scripts/audit_dhcp_arp_conflict.ps1`):** Cross-references active dynamic leases from Windows DHCP with neighbor table cache to detect MAC collisions.
 - **Dynamic Scope Sanitizer (`scripts/fix_dhcp_exclusions.ps1`):** Injects single-host exclusion ranges into the DHCP scope to immediately remove unmanaged static IPs from the allocation pool.
@@ -71,4 +91,9 @@ Test-NetConnection -ComputerName "gateway.corp.internal" -Port 445
 ## Key Takeaways
 - Static ARP entries must never overlap with dynamic DHCP allocation ranges.
 - Dual-homed endpoints (Domain + WireGuard/VPN) amplify blackholing effects when split-tunnel routing relies on default route overrides.
-  
+
+## License
+
+Copyright (c) 2026. All rights reserved.
+
+This repository and its associated automation assets are proprietary intellectual property. Unauthorized copying, distribution, modification, or commercial exploitation of this material via any medium is strictly prohibited.
