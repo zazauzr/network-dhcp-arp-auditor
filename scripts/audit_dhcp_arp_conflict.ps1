@@ -14,6 +14,7 @@ param (
     [Parameter(Mandatory = $false)]
     [string]$GatewayIp = "192.168.10.1",
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'LogPath')]
     [Parameter(Mandatory = $false)]
     [string]$LogPath = ".\dhcp_arp_audit.log"
 )
@@ -21,7 +22,7 @@ param (
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-function Write-Log {
+function Write-AuditLog {
     param ([string]$Message, [string]$Level = "INFO")
     $Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
     $Formatted = "[$Timestamp] [$Level] $Message"
@@ -29,7 +30,7 @@ function Write-Log {
     Add-Content -Path $LogPath -Value $Formatted -ErrorAction SilentlyContinue
 }
 
-Write-Log "Starting DHCP vs ARP reconciliation for Scope: $ScopeId via Gateway: $GatewayIp"
+Write-AuditLog "Starting DHCP vs ARP reconciliation for Scope: $ScopeId via Gateway: $GatewayIp"
 
 try {
     if (-not (Get-Command -Name Get-DhcpServerv4Lease -ErrorAction SilentlyContinue)) {
