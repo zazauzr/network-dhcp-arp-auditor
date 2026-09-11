@@ -37,11 +37,11 @@ try {
         throw "RSAT DHCP Server module is not installed or available."
     }
 
-    Write-Log "Querying active DHCP leases..."
+    Write-AuditLog "Querying active DHCP leases..."
     $DhcpLeases = Get-DhcpServerv4Lease -ScopeId $ScopeId -AllLeases | 
         Select-Object IPAddress, ClientId, HostName, AddressState
 
-    Write-Log "Reading local ARP resolution cache for gateway segment..."
+    Write-AuditLog "Reading local ARP resolution cache for gateway segment..."
     $ArpEntries = Get-NetNeighbor -AddressFamily IPv4 | 
         Where-Object { $_.IPAddress -like "$($ScopeId.TrimEnd('.0')).*" } | 
         Select-Object IPAddress, LinkLayerAddress, State
@@ -57,18 +57,18 @@ try {
 
             if ($DhcpMac -ne $ArpMac -and $ArpMac -ne "") {
                 $ConflictsFound++
-                Write-Log "CONFLICT DETECTED: IP [$($Lease.IPAddress)] leased to [$DhcpMac], but locked to [$ArpMac] on L2 (State: $($MatchingArp.State))" "ERROR"
+                Write-AuditLog "CONFLICT DETECTED: IP [$($Lease.IPAddress)] leased to [$DhcpMac], but locked to [$ArpMac] on L2 (State: $($MatchingArp.State))" "ERROR"
             }
         }
     }
 
     if ($ConflictsFound -eq 0) {
-        Write-Log "Audit completed. No lease-to-ARP collisions detected." "INFO"
+         Write-AuditLog "Audit completed. No lease-to-ARP collisions detected." "INFO"
     } else {
-        Write-Log "Audit completed with $ConflictsFound collision(s). Action required." "WARN"
+         Write-AuditLog "Audit completed with $ConflictsFound collision(s). Action required." "WARN"
     }
 
 } catch {
-    Write-Log "Execution halted: $($_.Exception.Message)" "FATAL"
+     Write-AuditLog "Execution halted: $($_.Exception.Message)" "FATAL"
     exit 1
 }
