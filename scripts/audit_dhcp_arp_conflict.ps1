@@ -7,6 +7,7 @@
 #>
 
 [CmdletBinding()]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
 param (
     [Parameter(Mandatory = $false)]
     [string]$ScopeId = "192.168.10.0",
@@ -14,7 +15,6 @@ param (
     [Parameter(Mandatory = $false)]
     [string]$GatewayIp = "192.168.10.1",
 
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'LogPath')]
     [Parameter(Mandatory = $false)]
     [string]$LogPath = ".\dhcp_arp_audit.log"
 )
@@ -63,12 +63,12 @@ try {
     }
 
     if ($ConflictsFound -eq 0) {
-         Write-AuditLog "Audit completed. No lease-to-ARP collisions detected." "INFO"
+        Write-AuditLog "Audit completed. No lease-to-ARP collisions detected." "INFO"
     } else {
-         Write-AuditLog "Audit completed with $ConflictsFound collision(s). Action required." "WARN"
+        Write-AuditLog "Audit completed with $ConflictsFound collision(s). Action required." "WARN"
     }
 
 } catch {
-     Write-AuditLog "Execution halted: $($_.Exception.Message)" "FATAL"
+    Write-AuditLog "Execution halted: $($_.Exception.Message)" "FATAL"
     exit 1
 }
