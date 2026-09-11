@@ -17,8 +17,7 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-          $Results = Invoke-ScriptAnalyzer -Path ./scripts -Recurse -Severity Error, Warning
+          $Results = Invoke-ScriptAnalyzer -Path ./ -Recurse -Severity Error, Warning
           if ($Results) {
               $Results | Format-Table -AutoSize
               throw "PSScriptAnalyzer found issues in automation scripts."
